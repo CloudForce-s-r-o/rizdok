@@ -1,0 +1,148 @@
+/*
+  styles.css
+  ==========
+  Přehled stylů pro aplikaci "Evidence seznámení".
+  Tento soubor obsahuje základní layout, styly pro tabulky,
+  tlačítka a box pro autentifikaci.
+
+  Doporučení: v produkci minifikujte tento soubor a přidejte
+  vhodné cache hlavičky na serveru.
+*/
+
+/* ===== BASE LAYOUT ===== */
+/* Základní prvky stránky */
+body {
+    font-family: Arial, sans-serif;     /* Volba fontu */
+    max-width: 980px;                   /* Maximální šířka obsahu */
+    margin: auto;                       /* Centrování */
+    padding: 20px;                      /* Vnitřní prostor */
+    background: #f5f5f5;                /* Světlý šedý background */
+}
+
+/* ===== TYPOGRAPHY ===== */
+/* Nadpisy */
+h1, h2 { color: #333; }                 /* Tmavší barva nadpisů */
+
+/* ===== TABULKY ===== */
+/* Jednoduché a čitelné zobrazení tabulek */
+table { 
+    width: 100%;                        /* Tabulka na plnou šířku */
+    border-collapse: collapse;          /* Oddělené okraje buněk */
+    margin-top: 15px;                   /* Prostor nad tabulkou */
+}
+th, td { 
+    padding: 10px;                      /* Prostor v buňkách */
+    border: 1px solid #bbb;             /* Ohraničení */
+    background: #fff;                   /* Bílý background */
+}
+th { 
+    background: #e6e6e6;                /* Tmavší header */
+    text-align: left;                   /* Zarovnání textu */
+}
+
+/* ===== UTILITY CLASSES ===== */
+/* Pomocné třídy */
+.hidden { 
+    display: none;                      /* Skrytí prvků */
+}
+
+/* ===== BUTTONS ===== */
+/* Styly pro tlačítka */
+#confirmBtn, #refreshBtn {
+    margin-top: 16px;                   /* Prostor nad tlačítkem */
+    padding: 10px 14px;                 /* Vnitřní prostor */
+    font-size: 15px;                    /* Velikost textu */
+    background: #0066cc;                /* Modrá barva */
+    color: white;                       /* Bílý text */
+    border: none;                       /* Bez rámečku */
+    cursor: pointer;                    /* Kurzor na ruku */
+    border-radius: 6px;                 /* Zaoblené rohy */
+}
+
+/* Tlačítka v disabled stavu */
+#confirmBtn[disabled], #refreshBtn[disabled] { 
+    opacity: 0.6;                       /* Znetransparentnění */
+    cursor: not-allowed;                /* Zakázaný kurzor */
+}
+
+/* Refresh tlačítko - odlišná barva */
+#refreshBtn { 
+    background: #777;                   /* Šedá barva */
+    margin-left: 10px;                  /* Prostor od potvrzovacího tlačítka */
+}
+
+/* ===== STATUS & ERROR MESSAGES ===== */
+/* Zprávy a stavové informace */
+#errorMsg { 
+    color: red;                         /* Červená barva pro chyby */
+    font-weight: bold;                  /* Tučný text */
+    margin-bottom: 10px;                /* Prostor pod chybou */
+}
+
+#status { 
+    margin-top: 12px;                   /* Prostor nad stavovou zprávou */
+    font-weight: bold;                  /* Tučný text */
+}
+
+.small { 
+    font-size: 0.9rem;                  /* Menší písmo */
+    color: #555;                        /* Tmavší šedá */
+}
+
+/* ===== AUTH BOX - Autentifikační formulář ===== */
+/* Centrální box pro přihlášení */
+.auth-box {
+    max-width: 400px;                   /* Maximální šířka */
+    margin: 50px auto;                  /* Centrování s prostorem nahoře */
+    padding: 30px;                      /* Vnitřní prostor */
+    background: white;                  /* Bílý background */
+    border-radius: 8px;                 /* Zaoblené rohy */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Lehký stín */
+}
+
+.auth-title { 
+    text-align: center;                 /* Střed */
+    margin-bottom: 20px;                /* Prostor pod nadpisem */
+}
+
+.auth-desc { 
+    color: #666;                        /* Šedá barva */
+    margin-bottom: 20px;                /* Prostor pod textem */
+}
+
+.auth-input {
+    width: 100%;                        /* Plná šířka */
+    padding: 10px;                      /* Vnitřní prostor */
+    margin-bottom: 15px;                /* Prostor pod inputem */
+    border: 1px solid #ccc;             /* Světlý border */
+    border-radius: 4px;                 /* Lehce zaoblené rohy */
+    font-size: 14px;                    /* Velikost textu */
+    box-sizing: border-box;             /* Šířka včetně paddingu */
+}
+
+.auth-button {
+    width: 100%;                        /* Plná šířka */
+    padding: 10px 14px;                 /* Vnitřní prostor */
+    font-size: 15px;                    /* Velikost textu */
+    background: #0066cc;                /* Modrá barva */
+    color: white;                       /* Bílý text */
+    border: none;                       /* Bez rámečku */
+    cursor: pointer;                    /* Kurzor na ruku */
+    border-radius: 6px;                 /* Zaoblené rohy */
+}
+
+/* Focus state pro lepší přístupnost - viditelný rámeček při focusu */
+.auth-button:focus, .auth-input:focus { 
+    outline: 3px solid rgba(0,102,204,0.2); /* Modrý rámeček */
+}
+
+.auth-error { 
+    color: red;                         /* Červená barva */
+    margin-top: 10px;                   /* Prostor nad chybou */
+    font-size: 14px;                    /* Menší font */
+}
+
+/* ===== TODO NOTES ===== */
+/* Budoucí vylepšení */
+/* TODO: přidat media queries pro menší obrazovky (např. padding zmenšit) */
+
