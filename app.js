@@ -69,18 +69,38 @@ let PASSWORD = null; // bude nastaveno po autentifikaci
 // Funkce: Inicializace autentifikace
 // Pokud jsme si už dříve uložili heslo pro tohoto uživatele, 
 // automaticky se přihlásíme bez nutnosti zadávat heslo znova
+// NOVĚ: kontroluje expiraci - po 24 hodinách vyžaduje znovu heslo
 function initAuth() {
     // Čteme z localStorage s klíčem: "authPassword_" + USER_ID
     // Např. "authPassword_testuser"
-    const savedPassword = localStorage.getItem("authPassword_" + USER_ID);
+    const savedData = localStorage.getItem("authPassword_" + USER_ID);
     
-    // Pokud existuje uložené heslo, použij ho
-    if (savedPassword) {
-        PASSWORD = savedPassword;                       // Ulož do paměti
-        authSection.classList.add("hidden");            // Skryj auth formulář
-        loadData();                                     // Hned načti data
+    // Pokud existuje uložené heslo, zkontroluj expiraci
+    if (savedData) {
+        try {
+            // Parse uložená data (očekáváme JSON s heslem a timestampem)
+            const data = JSON.parse(savedData);
+            const now = new Date().getTime();
+            
+            // Zkontroluj, zda už heslo nevypršelo (5 minut = 300000 ms)
+            const expirationTime = 5 * 60 * 1000; // 5 minut
+            
+            if (now - data.timestamp < expirationTime) {
+                // Heslo je stále platné
+                PASSWORD = data.password;                   // Ulož do paměti
+                authSection.classList.add("hidden");        // Skryj auth formulář
+                loadData();                                 // Hned načti data
+            } else {
+                // Heslo vypršelo, smaž ho z localStorage
+                localStorage.removeItem("authPassword_" + USER_ID);
+            }
+        } catch (e) {
+            // Pokud je uložený formát starý (jen string hesla), smaž ho
+            // a vyžaduj nové přihlášení
+            localStorage.removeItem("authPassword_" + USER_ID);
+        }
     }
-    // Pokud neexistuje (poprvé), auth sekce zůstane viditelná
+    // Pokud neexistuje (poprvé) nebo vypršelo, auth sekce zůstane viditelná
 }
 
 // Event listener: Klik na tlačítko ověření
@@ -193,7 +213,12 @@ async function loadData() {
         // Heslo se uloží AŽ TEPRVE PO úspěšném API volání
         // Tímto se vyhneme situaci, kdy by se uložilo špatné heslo
         // A pak by se automaticky přihlašoval s tím špatným heslem
-        localStorage.setItem("authPassword_" + USER_ID, PASSWORD);
+        // NOVĚ: ukládáme jako JSON s timestampem pro expiraci
+        const authData = {
+            password: PASSWORD,
+            timestamp: new Date().getTime() // aktuální čas v ms
+        };
+        localStorage.setItem("authPassword_" + USER_ID, JSON.stringify(authData));
 
         // === Vykreslení tabulek ===
         // renderTables() vezme data z API a vykreslí je v HTML tabulkách
