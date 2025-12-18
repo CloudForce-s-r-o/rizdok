@@ -1,17 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-
     <meta charset="UTF-8" />
-
     <title>Seznámení s dokumenty</title>
-
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-
     <h1>Evidence seznámení</h1>
     <div id="errorMsg"></div>
 
@@ -34,7 +28,6 @@
     </div>
 
     <div id="content" class="hidden">
-  
         <button id="refreshBtn">Obnovit seznam</button>
 
         <h2>Dokumenty čekající na seznámení</h2>
@@ -42,77 +35,31 @@
             <thead>
                 <tr>
                     <th style="width:40px"></th>
-                    
-      
                     <th>Název dokumentu</th>
-                    
-                    <!-- Sloupec pro datum, kdy byl dokument požadován -->
                     <th>Datum požadavku</th>
-                    
-                    <!-- Sloupec pro odkaz na dokument -->
                     <th>Odkaz</th>
                 </tr>
             </thead>
-            
-            <!-- 
-                TBODY: Tělo tabulky (dynamicky plnitelné)
-                app.js sem bude psát řádky přes appendChild()
-                Dynamicky se přidávají řádky pro každý čekající dokument
-            -->
             <tbody></tbody>
         </table>
 
-        <!-- 
-            H2: Nadpis sekce s hotovými dokumenty
-        -->
         <h2>Dokumenty již seznámené</h2>
-
-        <!-- 
-            TABLE: Tabulka s již potvrzenými dokumenty
-            id="doneTable" = JavaScript ji použije k přidávání řádků
-            
-            Struktura: podobná jako pendingTable, ale
-            - Bez checkboxu (je to jen info - už jsou potvrzené)
-            - Má sloupec "Datum seznámení" (kdy byla potvrzena)
-        -->
         <table id="doneTable">
             <thead>
                 <tr>
-                    <!-- 
-                        Bez checkboxu - jen informace
-                        Sloupce: název, datum požadavku, datum seznámení, odkaz
-                    -->
                     <th>Název dokumentu</th>
                     <th>Datum požadavku</th>
                     <th>Datum seznámení</th>
                     <th>Odkaz</th>
                 </tr>
             </thead>
-            
-            <!-- Tělo tabulky (dynamicky plnitelné) -->
             <tbody></tbody>
         </table>
 
-        <!-- 
-            DIV: Container pro tlačítko potvrzení a status
-        -->
         <div>
-            <!-- 
-                BUTTON: Potvrdit seznámení s dokumenty
-                id="confirmBtn" = JavaScript přidá click listener
-                class="hidden" = iniciálně skryté (viditelné jen když máme čekající docs)
-                disabled = iniciálně disabled (viditelné až když je aspoň 1 checkbox)
-                
-                app.js ho odkrývá a povoluje na základě výběru checkboxů
-            -->
             <button id="confirmBtn" class="hidden" disabled>
                 Potvrdit seznámení s dokumenty
             </button>
-
-            <!-- 
-                SPAN: Status zprávy (např. "Odesílám potvrzení…")
-                id="status" = JavaScript sem píše stavové zprávy během odesílání
-            -->
             <span id="status"></span>
         </div>
     </div>
