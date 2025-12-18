@@ -1,68 +1,277 @@
+<!-- 
+    ============================================
+    HTML5 DOKUMENT - EVIDENCE SEZNÁMENÍ
+    ============================================
+    
+    Struktura:
+    1. DOCTYPE + meta tags (kódování, jazyk, viewport)
+    2. HEAD (title, CSS import)
+    3. BODY:
+       - h1: nadpis stránky
+       - #errorMsg: prostor pro globální chyby (např. chybí ?id= v URL)
+       - #authSection: Auth formulář (skrytý po přihlášení)
+       - #loading: Loading indikátor (viditelný během fetch)
+       - #content: Hlavní obsah s tabulkami (skrytý dokud nejsou data)
+    4. <script src="app.js">: Import všech JS funkcí
+    
+    Poznámka: Veškerá logika je v app.js, HTML je jen struktura.
+-->
 <!DOCTYPE html>
+
+<!-- 
+    <html> tag:
+    - lang="cs" = říká prohlížeči, že obsah je v češtině
+      (pomáhá s SEO, výslovností screen readerů, atd.)
+-->
 <html lang="cs">
 <head>
+    <!-- 
+        META TAG: charset
+        UTF-8 je standard pro webové stránky (podporuje všechny jazyky)
+        Musí být v <head> na začátku
+    -->
     <meta charset="UTF-8" />
+    
+    <!-- 
+        TITLE: text viditelný v záložce prohlížeče
+        Měl by být krátký a popisný
+    -->
     <title>Seznámení s dokumenty</title>
+    
+    <!-- 
+        LINK: import externího CSS souboru
+        href="styles.css" = relativní cesta k souboru
+        rel="stylesheet" = říká prohlížeči, že to je stylesheet
+        Benefity oproti inline CSS:
+        - Oddělení concerns (struktura vs. styl)
+        - CSS se cachuje (pokud se změní HTML, CSS se znovu nestahuje)
+        - Čitelnější kód
+    -->
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
+    <!-- 
+        H1: hlavní nadpis stránky
+        Měl by být právě jeden <h1> na stránku (SEO, accessibility)
+    -->
     <h1>Evidence seznámení</h1>
+
+    <!-- 
+        DIV s id="errorMsg"
+        Účel: Zobrazit globální chyby (např. "Chybí parametr ?id= v URL!")
+        app.js sem bude psát textem do .textContent
+        Inicializačně je prázdný
+    -->
     <div id="errorMsg"></div>
 
+    <!-- 
+        ============================================
+        SEKCE 1: AUTENTIFIKACE (Auth Form)
+        ============================================
+        
+        Tato sekce je VIDITELNÁ na začátku.
+        Po úspěšném přihlášení se skryje (class="hidden" v CSS = display:none)
+        
+        Struktura:
+        - <div id="authSection">: wrapper pro autentifikaci
+        - <div class="auth-box">: stylizovaná box (CSS)
+        - <h2>: nadpis
+        - <p>: instrukce pro uživatele
+        - <input>: pole pro zadání kódu
+        - <button>: tlačítko potvrzení
+        - <div id="authError">: prostor pro error zprávy (špatné heslo, atd.)
+    -->
     <div id="authSection">
         <div class="auth-box">
+            <!-- Nadpis sekce pro uživatele -->
             <h2 class="auth-title">Ověření totožnosti</h2>
+            
+            <!-- Instrukce/popis: co má uživatel dělat -->
             <p class="auth-desc">Zadejte kód ze svého emailu:</p>
+
+            <!-- 
+                INPUT - textové pole pro zadání kódu
+                type="password" = maskuje znaky při psaní (pro bezpečnost)
+                id="passwordInput" = JavaScript ho najde a čte hodnotu
+                placeholder="..." = nápověda v poli (zmizí když user píše)
+                class="auth-input" = CSS styling z styles.css
+            -->
             <input 
                 type="password" 
                 id="passwordInput" 
                 placeholder="Kód z emailu" 
                 class="auth-input"
             >
+
+            <!-- 
+                BUTTON - tlačítko pro potvrzení hesla
+                id="authBtn" = JavaScript přidá event listener (click)
+                class="auth-button" = CSS styling
+                Text uvnitř: "Potvrdit"
+            -->
             <button id="authBtn" class="auth-button">Potvrdit</button>
+
+            <!-- 
+                DIV pro error zprávy při autentifikaci
+                id="authError" = JavaScript sem napíše chyby
+                class="auth-error" = CSS styling (červená barva, atd.)
+                Inicializačně je prázdný
+            -->
             <div id="authError" class="auth-error"></div>
         </div>
     </div>
+
+    <!-- 
+        ============================================
+        SEKCE 2: LOADING INDIKÁTOR
+        ============================================
+        
+        Tato sekce je SKRYTÁ na začátku (class="hidden" = display:none)
+        Zobrazí se během fetch operace (app.js ji odkryje)
+        Zmizí až po načtení dat
+    -->
     <div id="loading" class="hidden">
         Načítám data…
     </div>
 
+    <!-- 
+        ============================================
+        SEKCE 3: HLAVNÍ OBSAH (Content)
+        ============================================
+        
+        Tato sekce je SKRYTÁ na začátku (class="hidden")
+        Zobrazí se až po úspěšné autentifikaci a načtení dat
+        
+        Obsahuje:
+        1. Tlačítko "Obnovit seznam"
+        2. Tabulka "Čekajících" dokumentů (s checkboxy)
+        3. Tabulka "Hotových" dokumentů (bez checkboxů)
+        4. Tlačítko "Potvrdit" (skryté, viditelné jen když je checklist)
+        5. Status element (pro "Odesílám…" zprávy)
+    -->
     <div id="content" class="hidden">
+        <!-- 
+            BUTTON: Obnovit seznam
+            id="refreshBtn" = JavaScript přidá click listener
+            Zavolá loadData() znovu
+        -->
         <button id="refreshBtn">Obnovit seznam</button>
 
+        <!-- 
+            H2: Nadpis sekce s čekajícími dokumenty
+        -->
         <h2>Dokumenty čekající na seznámení</h2>
+
+        <!-- 
+            TABLE: Tabulka s čekajícími dokumenty
+            id="pendingTable" = JavaScript ji použije k přidávání řádků
+            
+            Struktura:
+            - <thead>: hlavička tabulky (fixní sloupce)
+                - <tr>: jeden řádek
+                  - <th>: čtyři sloupce: checkbox, název, datum požadavku, odkaz
+            - <tbody>: tělo tabulky (dynamicky plnitelné)
+                - Zde JavaScript přidá <tr> pro každý čekající dokument
+        -->
         <table id="pendingTable">
             <thead>
                 <tr>
+                    <!-- 
+                        TH: sloupec pro checkbox
+                        style="width:40px" = inline CSS: sloupec bude úzký
+                        Jednoduše " " = prázdný nadpis
+                    -->
                     <th style="width:40px"></th>
+                    
+                    <!-- Sloupec pro název dokumentu -->
                     <th>Název dokumentu</th>
+                    
+                    <!-- Sloupec pro datum, kdy byl dokument požadován -->
                     <th>Datum požadavku</th>
+                    
+                    <!-- Sloupec pro odkaz na dokument -->
                     <th>Odkaz</th>
                 </tr>
             </thead>
+            
+            <!-- 
+                TBODY: Tělo tabulky (dynamicky plnitelné)
+                app.js sem bude psát řádky přes appendChild()
+                Dynamicky se přidávají řádky pro každý čekající dokument
+            -->
             <tbody></tbody>
         </table>
 
+        <!-- 
+            H2: Nadpis sekce s hotovými dokumenty
+        -->
         <h2>Dokumenty již seznámené</h2>
+
+        <!-- 
+            TABLE: Tabulka s již potvrzenými dokumenty
+            id="doneTable" = JavaScript ji použije k přidávání řádků
+            
+            Struktura: podobná jako pendingTable, ale
+            - Bez checkboxu (je to jen info - už jsou potvrzené)
+            - Má sloupec "Datum seznámení" (kdy byla potvrzena)
+        -->
         <table id="doneTable">
             <thead>
                 <tr>
+                    <!-- 
+                        Bez checkboxu - jen informace
+                        Sloupce: název, datum požadavku, datum seznámení, odkaz
+                    -->
                     <th>Název dokumentu</th>
                     <th>Datum požadavku</th>
                     <th>Datum seznámení</th>
                     <th>Odkaz</th>
                 </tr>
             </thead>
+            
+            <!-- Tělo tabulky (dynamicky plnitelné) -->
             <tbody></tbody>
         </table>
 
+        <!-- 
+            DIV: Container pro tlačítko potvrzení a status
+        -->
         <div>
+            <!-- 
+                BUTTON: Potvrdit seznámení s dokumenty
+                id="confirmBtn" = JavaScript přidá click listener
+                class="hidden" = iniciálně skryté (viditelné jen když máme čekající docs)
+                disabled = iniciálně disabled (viditelné až když je aspoň 1 checkbox)
+                
+                app.js ho odkrývá a povoluje na základě výběru checkboxů
+            -->
             <button id="confirmBtn" class="hidden" disabled>
                 Potvrdit seznámení s dokumenty
             </button>
+
+            <!-- 
+                SPAN: Status zprávy (např. "Odesílám potvrzení…")
+                id="status" = JavaScript sem píše stavové zprávy během odesílání
+            -->
             <span id="status"></span>
         </div>
     </div>
 
+    <!-- 
+        ============================================
+        IMPORT APLIKAČNÍ LOGIKY
+        ============================================
+        
+        <script src="app.js">
+        Nahraje JavaScript soubor s veškerou logikou aplikace
+        - Definuje funkce: getIdFromUrl(), initAuth(), loadData(), renderTables(), atd.
+        - Přidá event listenery na tlačítka a elementy
+        - Zavolá initAuth() na konci (spustí aplikaci)
+        
+        Řádí se umisťuje na konci </body> pro lepší performance
+        (HTML se renderuje dříve než se stahuje JS)
+    -->
+    <script src="app.js"></script>
 </body>
 </html>
