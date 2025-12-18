@@ -9,11 +9,11 @@
 
 // Endpoint pro načtení seznamu dokumentů
 // Očekávaný response: JSON pole s objekty dokumentů
-const LOAD_ENDPOINT = "https://default8da5bad552c84f89bb8a7500a8e0e2.53.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/11e51341bef74744be4c93cae776fcdf/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xmsWpFTdq319G3NqcGgUNE7lWh8jICKymOlyyUxZdS4";
+const LOAD_ENDPOINT = "https://default40f47e5e0f3543d291f13536f290a4.6f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/8b6be599f8c14c2a939882e43906851e/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=BcSOI_G2LUwJ8LOxBblkSUhKyD6O_pYBNAYYx1JZFOk";
 
 // Endpoint pro potvrzení seznámení s dokumenty
 // Očekávaný request: JSON s formId, timestamp, selectedIds
-const CONFIRM_ENDPOINT = "https://default8da5bad552c84f89bb8a7500a8e0e2.53.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/1bb26896b1f2431bb7121fbda5e67851/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=O_cmrJd_YpxbBAlzQRmQpyGw2mTXKTdi-NX16NnT1VY";
+const CONFIRM_ENDPOINT = "https://default40f47e5e0f3543d291f13536f290a4.6f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/949a49f261a9453980f06b7c02b38cce/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=m7kT7BIsbhlrZ0PzBDEc3Zg88NPaazF341BKVh5jiDw";
 
 // ========== ČÁST 2: ZÍSKÁNÍ ID Z URL ==========
 // Funkce, která přečte parametr `id` z query stringu v URL (např. ?id=testuser)
